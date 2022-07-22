@@ -4,28 +4,21 @@
 # Contacts: <ma2sevich222@gmail.com>
 # File: deep_bbn.py
 #######################################################
-import pandas as pd
-
-import optuna
-import plotly.express as px
-
 import os
-
-import torch.optim as optim
-import torchbnn as bnn
-
 from datetime import date
-
-from torch.utils.data import DataLoader
 import numpy as np
-
+import optuna
+import pandas as pd
+import plotly.express as px
 import torch
 import torch.nn as nn
-
-from torchbnn.utils import freeze
-from utilits.functions import bayes_tune_get_stat_after_forward,data_to_binary
-from utilits.classes_and_models import DBNataset
+import torch.optim as optim
+import torchbnn as bnn
 from sklearn.tree import DecisionTreeClassifier
+from torch.utils.data import DataLoader
+from torchbnn.utils import freeze
+from utilits.classes_and_models import DBNataset
+from utilits.functions import bayes_tune_get_stat_after_forward, data_to_binary
 
 today = date.today()
 source = "source_root"
@@ -46,18 +39,14 @@ n_trials = 2
 ###################################################################################################
 
 
-
-
 def objective(trial):
     start_forward_time = "2021-01-04 00:00:00"
     df = pd.read_csv(f"{source}/{source_file_name}")
     forward_index = df[df["Datetime"] == start_forward_time].index[0]
 
-
     """""" """""" """""" """""" """"" Параметры сети """ """""" """""" """""" """"""
 
     batch_s = 300
-
 
     """""" """""" """""" """""" """"" Параметры для оптимизации   """ """ """ """ """ """ """ """ """ ""
 
@@ -72,10 +61,7 @@ def objective(trial):
     ##############################################################################################
     DBNmodel = nn.Sequential(
         bnn.BayesLinear(
-            prior_mu=0,
-            prior_sigma=0.1,
-            in_features=patch * 5,
-            out_features=n_hiden,
+            prior_mu=0, prior_sigma=0.1, in_features=patch * 5, out_features=n_hiden,
         ),
         nn.ReLU(),
         bnn.BayesLinear(
@@ -119,22 +105,19 @@ def objective(trial):
 
         for step in range(epochs):
             for _, (data, target) in enumerate(DNB_dataloader):
-
                 models = DBNmodel(data)
                 cross_entropy = cross_entropy_loss(models, target)
 
                 kl = klloss(DBNmodel)
                 total_cost = cross_entropy + klweight * kl
 
-
-
                 optimizer.zero_grad()
                 total_cost.backward()
                 optimizer.step()
 
             if step % 100 == 0:
-                    print("Энтропия", cross_entropy)
-                    print("Финальная лосс", total_cost)
+                print("Энтропия", cross_entropy)
+                print("Финальная лосс", total_cost)
 
         DT_trainX = []
         DBNmodel.eval()
@@ -213,7 +196,6 @@ def objective(trial):
 sampler = optuna.samplers.TPESampler(seed=2020)
 study = optuna.create_study(directions=["maximize", "maximize"], sampler=sampler)
 study.optimize(objective, n_trials=n_trials)
-
 
 tune_results = study.trials_dataframe()
 
