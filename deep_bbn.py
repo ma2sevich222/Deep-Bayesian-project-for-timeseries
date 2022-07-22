@@ -20,6 +20,9 @@ from torchbnn.utils import freeze
 from utilits.classes_and_models import DBNataset
 from utilits.functions import bayes_tune_get_stat_after_forward, data_to_binary
 
+if not os.path.isdir('outputs'):
+    os.mkdir('outputs')
+
 today = date.today()
 source = "source_root"
 out_root = "outputs"
