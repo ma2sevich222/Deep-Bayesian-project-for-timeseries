@@ -1,4 +1,9 @@
-
+#######################################################
+# Copyright © 2021-2099 Ekosphere. All rights reserved
+# Author: Evgeny Matusevich
+# Contacts: <ma2sevich222@gmail.com>
+# File: classes_and_models.py
+#######################################################
 import torch
 from torch.utils.data import Dataset
 class DBNataset(Dataset):
