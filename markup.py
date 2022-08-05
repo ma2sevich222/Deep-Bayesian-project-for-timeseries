@@ -15,9 +15,15 @@ import backtesting._plotting as plt_backtesting
 from utilits.make_df_from_csv_for_forward import make_df_from_csv_for_forward
 import warnings
 from tqdm import tqdm
+import os
 
 from utilits.markupSlide import markupSlide
 from utilits.lazy_strategy import LazyStrategy
+
+if not os.path.isdir('mark_up_results'):
+    os.mkdir('mark_up_results')
+if not os.path.isdir('mark_up_labeled_outputs'):
+    os.mkdir('mark_up_labeled_outputs')
 
 plt_backtesting._MAX_CANDLES = 1_000_000
 pd.pandas.set_option('display.max_columns', None)
