@@ -23,9 +23,9 @@ from utilits.functions import bayes_tune_get_stat_after_forward, data_to_binary,
 
 #torch.cuda.set_device(1)
 today = date.today()
-source = "source_root"
+source = "mark_up_labeled_outputs"
 out_root = "outputs"
-source_file_name = "GC_2020_2022_5min_nq90_extr11.csv"
+source_file_name = "GC_2020_2022_60min_nq90_extr3.csv"
 start_forward_time = "2021-01-04 00:00:00"
 date_xprmnt = today.strftime("%d_%m_%Y")
 out_data_root = f"deep_b_des_tree_{source_file_name[:-4]}_{date_xprmnt}"
@@ -35,7 +35,7 @@ intermedia.to_excel(
     f"{out_root}/{out_data_root}/intermedia_{source_file_name[:-4]}.xlsx"
 )
 clf = DecisionTreeClassifier()
-n_trials = 100
+n_trials = 1
 
 
 ###################################################################################################
@@ -56,9 +56,9 @@ def objective(trial):
     epochs = trial.suggest_int("epochs", 500, 1000,step=100)
     n_hiden = trial.suggest_int("n_hiden", 10, 300, step=10)
     n_hiden_two = trial.suggest_int("n_hiden_two", 10, 300, step=10)
-    train_window = trial.suggest_categorical("train_window", [7920, 23760, 48048, 52800])
+    train_window = trial.suggest_categorical("train_window", [606,1980,4004,4994])
     forward_window = trial.suggest_categorical(
-        "forward_window", [7920,23760, 48048]
+        "forward_window", [1980,4004]
     )
     ##############################################################################################
     DBNmodel = nn.Sequential(
