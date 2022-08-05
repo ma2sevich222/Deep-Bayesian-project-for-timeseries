@@ -18,15 +18,14 @@ from sklearn.tree import DecisionTreeClassifier
 from torch.utils.data import DataLoader
 from torchbnn.utils import freeze
 from utilits.classes_and_models import DBNataset
-from utilits.functions import bayes_tune_get_stat_after_forward, data_to_binary
+from utilits.functions import bayes_tune_get_stat_after_forward, data_to_binary, labeled_data_to_binary
 
-if not os.path.isdir('outputs'):
-    os.mkdir('outputs')
 
+#torch.cuda.set_device(1)
 today = date.today()
 source = "source_root"
 out_root = "outputs"
-source_file_name = "GC_2020_2022_60min.csv"
+source_file_name = "GC_2020_2022_5min_nq90_extr11.csv"
 start_forward_time = "2021-01-04 00:00:00"
 date_xprmnt = today.strftime("%d_%m_%Y")
 out_data_root = f"deep_b_des_tree_{source_file_name[:-4]}_{date_xprmnt}"
@@ -36,7 +35,7 @@ intermedia.to_excel(
     f"{out_root}/{out_data_root}/intermedia_{source_file_name[:-4]}.xlsx"
 )
 clf = DecisionTreeClassifier()
-n_trials = 2
+n_trials = 100
 
 
 ###################################################################################################
@@ -53,13 +52,13 @@ def objective(trial):
 
     """""" """""" """""" """""" """"" Параметры для оптимизации   """ """ """ """ """ """ """ """ """ ""
 
-    patch = trial.suggest_int("patch", 2, 100)
-    epochs = trial.suggest_int("epochs", 500, 1000)
+    patch = trial.suggest_int("patch", 2, 300)
+    epochs = trial.suggest_int("epochs", 500, 1000,step=100)
     n_hiden = trial.suggest_int("n_hiden", 10, 300, step=10)
     n_hiden_two = trial.suggest_int("n_hiden_two", 10, 300, step=10)
-    train_window = trial.suggest_categorical("train_window", [1000, 3000, 5000])
+    train_window = trial.suggest_categorical("train_window", [7920, 23760, 48048, 52800])
     forward_window = trial.suggest_categorical(
-        "forward_window", [705, 1411, 2822, 5644]
+        "forward_window", [7920,23760, 48048]
     )
     ##############################################################################################
     DBNmodel = nn.Sequential(
@@ -93,9 +92,9 @@ def objective(trial):
             ]
         df_for_split = df_for_split[int(forward_window) :]
         df_for_split = df_for_split.reset_index(drop=True)
-        Train_X, Train_Y, Forward_X, Signals = data_to_binary(
+        Train_X, Train_Y, Forward_X, Signals = labeled_data_to_binary(
             train_df, forward_df, patch
-        )
+        ) # данные в бинарное представление
 
         DNB_dataset = DBNataset(
             Train_X[: len(Train_X) // 2], Train_Y[: len(Train_X) // 2]
@@ -105,7 +104,7 @@ def objective(trial):
         klloss = bnn.BKLLoss(reduction="mean", last_layer_only=False)
         klweight = 0.01
         optimizer = optim.Adam(DBNmodel.parameters(), lr=0.001)
-
+        DBNmodel.cuda()
         for step in range(epochs):
             for _, (data, target) in enumerate(DNB_dataloader):
                 models = DBNmodel(data)
@@ -121,13 +120,14 @@ def objective(trial):
             if step % 100 == 0:
                 print("Энтропия", cross_entropy)
                 print("Финальная лосс", total_cost)
-
+        '''Формируем обучающие данные для классификатора деревьев решений, где 
+        где вектор будет состоять из предсказанного класса и вероятности , а таргет реальный класс'''
         DT_trainX = []
         DBNmodel.eval()
         freeze(DBNmodel)
         with torch.no_grad():
             for arr in Train_X[len(Train_X) // 2 :]:
-                arr = torch.from_numpy(arr.astype(np.float32))
+                arr = torch.from_numpy(arr.astype(np.float32)).cuda()
 
                 pred = DBNmodel(arr)
                 DT_trainX.append(
@@ -137,13 +137,13 @@ def objective(trial):
                     ]
                 )
 
-        des_lable = [np.argmax(i) for i in Train_Y[len(Train_X) // 2 :]]
+        des_lable = [np.argmax(i) for i in Train_Y[len(Train_X) // 2 :]] # преобразуем OHE в индексы классов
         clf = DecisionTreeClassifier()
-        clf = clf.fit(np.array(DT_trainX), np.array(des_lable))
+        clf = clf.fit(np.array(DT_trainX), np.array(des_lable)) # обучаем классификатор
         predictions = []
         with torch.no_grad():
             for arr in Forward_X:
-                arr = torch.from_numpy(arr.astype(np.float32))
+                arr = torch.from_numpy(arr.astype(np.float32)).cuda()
                 pred = DBNmodel(arr)
                 class_n = clf.predict(
                     np.array(

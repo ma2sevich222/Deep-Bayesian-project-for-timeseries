@@ -9,8 +9,8 @@ from torch.utils.data import Dataset
 class DBNataset(Dataset):
     def __init__(self, train_features, train_labels):
 
-        self.x_train = torch.tensor(train_features, dtype=torch.float32)
-        self.y_train = torch.tensor(train_labels, dtype=torch.float32)
+        self.x_train = torch.tensor(train_features, dtype=torch.float32).cuda()
+        self.y_train = torch.tensor(train_labels, dtype=torch.float32).cuda()
 
     def __len__(self):
         return len(self.y_train)
