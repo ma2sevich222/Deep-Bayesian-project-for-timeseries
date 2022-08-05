@@ -141,6 +141,7 @@ def objective(trial):
         clf = DecisionTreeClassifier()
         clf = clf.fit(np.array(DT_trainX), np.array(des_lable)) # обучаем классификатор
         predictions = []
+        ''' ЗДЕСЬ ДЕЛАЕМ ФОРВАРДНЫЙ АНАЛИЗ'''
         with torch.no_grad():
             for arr in Forward_X:
                 arr = torch.from_numpy(arr.astype(np.float32)).cuda()
