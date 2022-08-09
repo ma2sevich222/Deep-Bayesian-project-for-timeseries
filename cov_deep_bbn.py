@@ -17,18 +17,18 @@ import torchbnn as bnn
 from sklearn.tree import DecisionTreeClassifier
 from torch.utils.data import DataLoader
 from torchbnn.utils import freeze
-from utilits.classes_and_models import DBNataset
-from utilits.functions import bayes_tune_get_stat_after_forward, data_to_binary, labeled_data_to_binary
+from utilits.classes_and_models import conVDBNataset
+from utilits.functions import bayes_tune_get_stat_after_forward, data_to_binary, labeled_data_to_binary,tensor_size_calc
 
 
-torch.cuda.set_device(1)
+#torch.cuda.set_device(1)
 today = date.today()
 source = "source_root"
 out_root = "outputs"
 source_file_name = "GC_2020_2022_15min_nq90_extr4.csv"
 start_forward_time = "2021-01-04 00:00:00"
 date_xprmnt = today.strftime("%d_%m_%Y")
-out_data_root = f"net_deep_b_des_tree_{source_file_name[:-4]}_{date_xprmnt}"
+out_data_root = f"conv_deep_b_des_tree_{source_file_name[:-4]}_{date_xprmnt}"
 os.mkdir(f"{out_root}/{out_data_root}")
 intermedia = pd.DataFrame()
 intermedia.to_excel(
@@ -49,34 +49,39 @@ def objective(trial):
     """""" """""" """""" """""" """"" Параметры сети """ """""" """""" """""" """"""
 
     batch_s = 300
-
+    kernel = 2
+    strd = 1
     """""" """""" """""" """""" """"" Параметры для оптимизации   """ """ """ """ """ """ """ """ """ ""
 
-    patch = trial.suggest_int("patch", 120, 300)
+    patch = trial.suggest_int("patch", 20, 300)
     epochs = trial.suggest_int("epochs", 100, 800,step=50)
     n_hiden = trial.suggest_int("n_hiden", 300, 500, step=10)
     n_hiden_two = trial.suggest_int("n_hiden_two", 300, 500, step=10)
-    n_hiden_three= trial.suggest_int("n_hiden_three", 10, 200, step=10)
     train_window = trial.suggest_categorical("train_window", [2640,7920,16016,19976])
     forward_window = trial.suggest_categorical(
         "forward_window", [1320, 2640,7920]
     )
+    conv_out = tensor_size_calc(patch, 5, kernel, strd, n_hiden)
     ##############################################################################################
     DBNmodel = nn.Sequential(
-        bnn.BayesLinear(
-            prior_mu=0, prior_sigma=0.1, in_features=patch * 5, out_features=n_hiden,
+        bnn.BayesConv2d(
+            prior_mu=0,
+            prior_sigma=0.1,
+            in_channels=1,
+            out_channels=n_hiden,
+            kernel_size=kernel,
+            stride=strd,
         ),
         nn.ReLU(),
+        nn.Flatten(),
         bnn.BayesLinear(
-            prior_mu=0, prior_sigma=0.1, in_features=n_hiden, out_features=n_hiden_two
+            prior_mu=0, prior_sigma=0.1, in_features=conv_out, out_features=n_hiden
         ),
+
         nn.ReLU(),
+
         bnn.BayesLinear(
-            prior_mu=0, prior_sigma=0.1, in_features=n_hiden_two, out_features=n_hiden_three
-        ),
-        nn.ReLU(),
-        bnn.BayesLinear(
-            prior_mu=0, prior_sigma=0.1, in_features=n_hiden_three, out_features=2
+            prior_mu=0, prior_sigma=0.1, in_features=n_hiden, out_features=2
         ),
     )
     ###################################################################################################
@@ -101,8 +106,8 @@ def objective(trial):
             train_df, forward_df, patch
         ) # данные в бинарное представление
 
-        DNB_dataset = DBNataset(
-            Train_X[: len(Train_X) // 2], Train_Y[: len(Train_X) // 2]
+        DNB_dataset = conVDBNataset(
+            Train_X[: len(Train_X) // 2], Train_Y[: len(Train_X) // 2],patch
         )
         DNB_dataloader = DataLoader(DNB_dataset, batch_size=batch_s, shuffle=False)
         cross_entropy_loss = nn.CrossEntropyLoss()
@@ -132,13 +137,15 @@ def objective(trial):
         freeze(DBNmodel)
         with torch.no_grad():
             for arr in Train_X[len(Train_X) // 2 :]:
-                arr = torch.from_numpy(arr.astype(np.float32)).cuda()
+                arr = arr.reshape(1,patch,5,1)
+                arr = torch.from_numpy(arr.astype(np.float32)).cuda().permute(0, 3, 1, 2)
 
                 pred = DBNmodel(arr)
+                pred = pred.view(-1)
                 DT_trainX.append(
                     [
-                        float(torch.argmax(pred).cpu().detach().numpy()),
-                        float(pred[torch.argmax(pred)].cpu().detach().numpy()),
+                        float(torch.argmax(pred[0]).cpu().detach().numpy()),
+                        float(pred[torch.argmax(pred[0])].cpu().detach().numpy()),
                     ]
                 )
 
@@ -149,13 +156,15 @@ def objective(trial):
         ''' ЗДЕСЬ ДЕЛАЕМ ФОРВАРДНЫЙ АНАЛИЗ'''
         with torch.no_grad():
             for arr in Forward_X:
-                arr = torch.from_numpy(arr.astype(np.float32)).cuda()
+                arr = arr.reshape(1, patch, 5, 1)
+                arr = torch.from_numpy(arr.astype(np.float32)).cuda().permute(0, 3, 1, 2)
                 pred = DBNmodel(arr)
+                pred = pred.view(-1)
                 class_n = clf.predict(
                     np.array(
                         [
-                            float(torch.argmax(pred).cpu().detach().numpy()),
-                            float(pred[torch.argmax(pred)].cpu().detach().numpy()),
+                            float(torch.argmax(pred[0]).cpu().detach().numpy()),
+                            float(pred[torch.argmax(pred[0])].cpu().detach().numpy()),
                         ]
                     ).reshape(1, -1)
                 )
@@ -237,7 +246,7 @@ fig = px.parallel_coordinates(
         "user_attrs_# Trades": "Trades",
         "params_patch": "patch(bars)",
         "params_epochs": "epochs",
-        "params_n_hiden": "n_hiden",
+        "params_n_hiden": "Conv_chanels",
         "params_n_hiden_two": "n_hiden_two",
         "params_n_hiden_three" : "n_hiden_three",
         "params_train_window": "train_window (bars)",

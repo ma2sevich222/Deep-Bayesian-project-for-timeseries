@@ -9,12 +9,14 @@ import backtesting._plotting as plt_backtesting
 from backtesting import Backtest
 from utilits.lazy_strategy import LazyStrategy
 import numpy as np
+import torch
+import torch.nn as nn
 
 
 
 def data_to_binary(train_df, forward_df, look_back):
     binary_train = train_df.iloc[:, 1:].diff()
-    binary_train[binary_train < 0] = 0
+    binary_train[binary_train <=0 ] = 0
     binary_train[binary_train > 0] = 1
     target = binary_train["Close"].values[2:]
     binary_train = binary_train[1:-1]
@@ -36,7 +38,7 @@ def data_to_binary(train_df, forward_df, look_back):
     Train_Y = [[1, 0] if i == 0 else [0, 1] for i in Train_labels]
 
     binary_forward = forward_df.iloc[:, 1:].diff()
-    binary_forward[binary_forward < 0] = 0
+    binary_forward[binary_forward <= 0] = 0
     binary_forward[binary_forward > 0] = 1
     binary_forward = binary_forward[1:]
     forward_df = forward_df[1:]
@@ -174,7 +176,7 @@ def bayes_tune_get_stat_after_forward(
 def labeled_data_to_binary(train_df, forward_df, look_back):
     binary_train = train_df[["Open", "High", "Low", "Close", "Volume"]].diff()
     binary_train=binary_train[1:]
-    binary_train[binary_train < 0] = 0
+    binary_train[binary_train <= 0] = 0
     binary_train[binary_train > 0] = 1
     #target = binary_train["Close"].values[2:]
     #binary_train = binary_train[1:-1]
@@ -199,7 +201,7 @@ def labeled_data_to_binary(train_df, forward_df, look_back):
     Train_Y = [[1, 0] if i == 0 else [0, 1] for i in Train_labels]
 
     binary_forward = forward_df[["Open", "High", "Low", "Close", "Volume"]].diff()
-    binary_forward[binary_forward < 0] = 0
+    binary_forward[binary_forward <= 0] = 0
     binary_forward[binary_forward > 0] = 1
     binary_forward = binary_forward[1:]
 
@@ -244,3 +246,100 @@ def labeled_data_to_binary(train_df, forward_df, look_back):
     )
 
     return np.array(Train_X), np.array(Train_Y), np.array(Test_X), Signals
+
+
+def data_to_binary_with_cashClass(train_df, forward_df, look_back):
+    #0-cash
+    #1-buy
+    #2-sell
+    binary_train = train_df.iloc[:, 1:].diff()
+
+    binary_train['Target'] = np.where((binary_train['Close'] >= -0.8) & (binary_train['Close'] <= 0.8), 0,
+                                      binary_train['Close'])
+    binary_train['Target'] = np.where(binary_train['Close'] < -0.8, 2, binary_train['Target'])
+    binary_train['Target'] = np.where(binary_train['Close'] > 0.8, 1, binary_train['Target'])
+    target = binary_train["Target"].values[2:]
+    del binary_train["Target"]
+    binary_train[binary_train <= 0] = 0
+    binary_train[binary_train > 0] = 1
+    binary_train = binary_train[1:-1]
+    binary_train["Target"] = target
+    train_samples = [
+        binary_train[i - look_back : i]
+        for i in range(len(binary_train))
+        if i - look_back >= 0
+    ]
+    Train_X = []
+    Train_labels = []
+    for sample in train_samples:
+        Train_X.append(
+            sample[["Open", "High", "Low", "Close", "Volume"]].to_numpy().flatten()
+        )
+        Train_labels.append(sample["Target"].iloc[-1])
+
+    #Train_Y = [[1, 0] if i == 0 else [0, 1] for i in Train_labels]
+    Train_Y=[]
+    for l in Train_labels:
+        if int(l)==0:
+            Train_Y.append([1,0,0])
+        elif int(l)==1:
+            Train_Y.append([0, 1, 0])
+        else:
+            Train_Y.append([0, 0, 1])
+
+
+
+
+    binary_forward = forward_df.iloc[:, 1:].diff()
+    binary_forward[binary_forward < 0] = 0
+    binary_forward[binary_forward > 0] = 1
+    binary_forward = binary_forward[1:]
+    forward_df = forward_df[1:]
+    foraward_samples = [
+        forward_df[i - look_back : i]
+        for i in range(len(forward_df))
+        if i - look_back >= 0
+    ]
+    forward_binary_samples = [
+        binary_forward[i - look_back : i]
+        for i in range(len(binary_forward))
+        if i - look_back >= 0
+    ]
+    Test_X = []
+    Date = []
+    Open = []
+    High = []
+    Low = []
+    Close = []
+    Volume = []
+    for sample in forward_binary_samples:
+        Test_X.append(
+            sample[["Open", "High", "Low", "Close", "Volume"]].to_numpy().flatten()
+        )
+    for or_sample in foraward_samples:
+        Date.append(or_sample["Datetime"].iloc[-1])
+        Open.append(or_sample["Open"].iloc[-1])
+        High.append(or_sample["High"].iloc[-1])
+        Low.append(or_sample["Low"].iloc[-1])
+        Close.append(or_sample["Close"].iloc[-1])
+        Volume.append(or_sample["Volume"].iloc[-1])
+    Signals = pd.DataFrame(
+        {
+            "Datetime": Date,
+            "Open": Open,
+            "High": High,
+            "Low": Low,
+            "Close": Close,
+            "Volume": Volume,
+        }
+    )
+
+    return np.array(Train_X), np.array(Train_Y), np.array(Test_X), Signals
+
+def tensor_size_calc(pattern_size, features_num, kernel, strd, conv_chs):
+    layer = nn.Conv2d(1, conv_chs, kernel_size=kernel, stride=strd)
+    input = torch.randn(100, 1, pattern_size, features_num)
+    output = layer(input).detach().numpy()
+
+    after_conv = np.prod(output.shape[1:])
+    return after_conv

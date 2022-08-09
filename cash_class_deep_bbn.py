@@ -18,7 +18,7 @@ from sklearn.tree import DecisionTreeClassifier
 from torch.utils.data import DataLoader
 from torchbnn.utils import freeze
 from utilits.classes_and_models import DBNataset
-from utilits.functions import bayes_tune_get_stat_after_forward, data_to_binary, labeled_data_to_binary
+from utilits.functions import bayes_tune_get_stat_after_forward, data_to_binary, labeled_data_to_binary,data_to_binary_with_cashClass
 
 
 torch.cuda.set_device(1)
@@ -28,14 +28,14 @@ out_root = "outputs"
 source_file_name = "GC_2020_2022_15min_nq90_extr4.csv"
 start_forward_time = "2021-01-04 00:00:00"
 date_xprmnt = today.strftime("%d_%m_%Y")
-out_data_root = f"net_deep_b_des_tree_{source_file_name[:-4]}_{date_xprmnt}"
+out_data_root = f"withcash_deep_b_des_tree_{source_file_name[:-4]}_{date_xprmnt}"
 os.mkdir(f"{out_root}/{out_data_root}")
 intermedia = pd.DataFrame()
 intermedia.to_excel(
     f"{out_root}/{out_data_root}/intermedia_{source_file_name[:-4]}.xlsx"
 )
 clf = DecisionTreeClassifier()
-n_trials = 100
+n_trials = 1000
 
 
 ###################################################################################################
@@ -52,14 +52,14 @@ def objective(trial):
 
     """""" """""" """""" """""" """"" Параметры для оптимизации   """ """ """ """ """ """ """ """ """ ""
 
-    patch = trial.suggest_int("patch", 120, 300)
-    epochs = trial.suggest_int("epochs", 100, 800,step=50)
-    n_hiden = trial.suggest_int("n_hiden", 300, 500, step=10)
-    n_hiden_two = trial.suggest_int("n_hiden_two", 300, 500, step=10)
-    n_hiden_three= trial.suggest_int("n_hiden_three", 10, 200, step=10)
+    patch = trial.suggest_int("patch", 2, 300,step=5)
+    epochs = trial.suggest_int("epochs", 500, 1500,step=50)
+    n_hiden = trial.suggest_int("n_hiden", 50, 500, step=10)
+    n_hiden_two = trial.suggest_int("n_hiden_two", 50, 500, step=10)
+
     train_window = trial.suggest_categorical("train_window", [2640,7920,16016,19976])
     forward_window = trial.suggest_categorical(
-        "forward_window", [1320, 2640,7920]
+        "forward_window", [1320, 2640,7920,16016]
     )
     ##############################################################################################
     DBNmodel = nn.Sequential(
@@ -72,11 +72,7 @@ def objective(trial):
         ),
         nn.ReLU(),
         bnn.BayesLinear(
-            prior_mu=0, prior_sigma=0.1, in_features=n_hiden_two, out_features=n_hiden_three
-        ),
-        nn.ReLU(),
-        bnn.BayesLinear(
-            prior_mu=0, prior_sigma=0.1, in_features=n_hiden_three, out_features=2
+            prior_mu=0, prior_sigma=0.1, in_features=n_hiden_two, out_features=3
         ),
     )
     ###################################################################################################
@@ -97,7 +93,7 @@ def objective(trial):
             ]
         df_for_split = df_for_split[int(forward_window) :]
         df_for_split = df_for_split.reset_index(drop=True)
-        Train_X, Train_Y, Forward_X, Signals = labeled_data_to_binary(
+        Train_X, Train_Y, Forward_X, Signals = data_to_binary_with_cashClass(
             train_df, forward_df, patch
         ) # данные в бинарное представление
 
@@ -165,7 +161,7 @@ def objective(trial):
         signals.append(Signals)
 
     signals_combained = pd.concat(signals, ignore_index=True, sort=False)
-    signals_combained.loc[signals_combained["Signal"] == 0, "Signal"] = -1
+    signals_combained.loc[signals_combained["Signal"] == 2, "Signal"] = -1
     df_stata = bayes_tune_get_stat_after_forward(
         signals_combained,
         patch,
@@ -222,7 +218,6 @@ df_plot = tune_results[
         "params_epochs",
         "params_n_hiden",
         "params_n_hiden_two",
-        "params_n_hiden_three",
         "params_train_window",
         "params_forward_window",
     ]
@@ -239,7 +234,6 @@ fig = px.parallel_coordinates(
         "params_epochs": "epochs",
         "params_n_hiden": "n_hiden",
         "params_n_hiden_two": "n_hiden_two",
-        "params_n_hiden_three" : "n_hiden_three",
         "params_train_window": "train_window (bars)",
         "params_forward_window": "forward_window (bars)",
     },

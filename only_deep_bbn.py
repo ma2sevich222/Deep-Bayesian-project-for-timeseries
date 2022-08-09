@@ -28,14 +28,14 @@ out_root = "outputs"
 source_file_name = "GC_2020_2022_15min_nq90_extr4.csv"
 start_forward_time = "2021-01-04 00:00:00"
 date_xprmnt = today.strftime("%d_%m_%Y")
-out_data_root = f"net_deep_b_des_tree_{source_file_name[:-4]}_{date_xprmnt}"
+out_data_root = f"only_deep_b_{source_file_name[:-4]}_{date_xprmnt}"
 os.mkdir(f"{out_root}/{out_data_root}")
 intermedia = pd.DataFrame()
 intermedia.to_excel(
     f"{out_root}/{out_data_root}/intermedia_{source_file_name[:-4]}.xlsx"
 )
 clf = DecisionTreeClassifier()
-n_trials = 100
+n_trials = 1000
 
 
 ###################################################################################################
@@ -52,14 +52,14 @@ def objective(trial):
 
     """""" """""" """""" """""" """"" Параметры для оптимизации   """ """ """ """ """ """ """ """ """ ""
 
-    patch = trial.suggest_int("patch", 120, 300)
+    patch = trial.suggest_int("patch", 2, 300,step=5)
     epochs = trial.suggest_int("epochs", 100, 800,step=50)
     n_hiden = trial.suggest_int("n_hiden", 300, 500, step=10)
     n_hiden_two = trial.suggest_int("n_hiden_two", 300, 500, step=10)
-    n_hiden_three= trial.suggest_int("n_hiden_three", 10, 200, step=10)
+
     train_window = trial.suggest_categorical("train_window", [2640,7920,16016,19976])
     forward_window = trial.suggest_categorical(
-        "forward_window", [1320, 2640,7920]
+        "forward_window", [2640,7920]
     )
     ##############################################################################################
     DBNmodel = nn.Sequential(
@@ -72,11 +72,7 @@ def objective(trial):
         ),
         nn.ReLU(),
         bnn.BayesLinear(
-            prior_mu=0, prior_sigma=0.1, in_features=n_hiden_two, out_features=n_hiden_three
-        ),
-        nn.ReLU(),
-        bnn.BayesLinear(
-            prior_mu=0, prior_sigma=0.1, in_features=n_hiden_three, out_features=2
+            prior_mu=0, prior_sigma=0.1, in_features=n_hiden_two, out_features=2
         ),
     )
     ###################################################################################################
@@ -102,7 +98,7 @@ def objective(trial):
         ) # данные в бинарное представление
 
         DNB_dataset = DBNataset(
-            Train_X[: len(Train_X) // 2], Train_Y[: len(Train_X) // 2]
+            Train_X, Train_Y
         )
         DNB_dataloader = DataLoader(DNB_dataset, batch_size=batch_s, shuffle=False)
         cross_entropy_loss = nn.CrossEntropyLoss()
@@ -126,7 +122,7 @@ def objective(trial):
                 print("Энтропия", cross_entropy)
                 print("Финальная лосс", total_cost)
         '''Формируем обучающие данные для классификатора деревьев решений, где 
-        где вектор будет состоять из предсказанного класса и вероятности , а таргет реальный класс'''
+        где вектор будет состоять из предсказанного класса и вероятности , а таргет реальный класс
         DT_trainX = []
         DBNmodel.eval()
         freeze(DBNmodel)
@@ -144,21 +140,15 @@ def objective(trial):
 
         des_lable = [np.argmax(i) for i in Train_Y[len(Train_X) // 2 :]] # преобразуем OHE в индексы классов
         clf = DecisionTreeClassifier()
-        clf = clf.fit(np.array(DT_trainX), np.array(des_lable)) # обучаем классификатор
+        clf = clf.fit(np.array(DT_trainX), np.array(des_lable)) # обучаем классификатор'''
         predictions = []
         ''' ЗДЕСЬ ДЕЛАЕМ ФОРВАРДНЫЙ АНАЛИЗ'''
         with torch.no_grad():
             for arr in Forward_X:
                 arr = torch.from_numpy(arr.astype(np.float32)).cuda()
                 pred = DBNmodel(arr)
-                class_n = clf.predict(
-                    np.array(
-                        [
-                            float(torch.argmax(pred).cpu().detach().numpy()),
-                            float(pred[torch.argmax(pred)].cpu().detach().numpy()),
-                        ]
-                    ).reshape(1, -1)
-                )
+                class_n = float(torch.argmax(pred).cpu().detach().numpy())
+
 
                 predictions.append(int(class_n))
         Signals["Signal"] = predictions
@@ -222,7 +212,6 @@ df_plot = tune_results[
         "params_epochs",
         "params_n_hiden",
         "params_n_hiden_two",
-        "params_n_hiden_three",
         "params_train_window",
         "params_forward_window",
     ]
@@ -239,7 +228,6 @@ fig = px.parallel_coordinates(
         "params_epochs": "epochs",
         "params_n_hiden": "n_hiden",
         "params_n_hiden_two": "n_hiden_two",
-        "params_n_hiden_three" : "n_hiden_three",
         "params_train_window": "train_window (bars)",
         "params_forward_window": "forward_window (bars)",
     },
