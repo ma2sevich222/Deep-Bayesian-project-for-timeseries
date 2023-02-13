@@ -1,14 +1,9 @@
-#######################################################
-# Copyright © 2021-2099 Ekosphere. All rights reserved
-# Author: Evgeny Matusevich
-# Contacts: <ma2sevich222@gmail.com>
-# File: forward.py
-#######################################################
+
 import pandas as pd
 import plotly.express as px
 
-file_root = "outputs/only_deep_b_GC_2020_2022_15min_nq90_extr4_11_08_2022"
-filename = "intermedia_GC_2020_2022_15min_nq90_extr4.xlsx"
+file_root = "outputs"
+filename = "only_dbb.xlsx"
 final_df = pd.read_excel(f"{file_root}/{filename}")  # загружаем результаты  анализа
 
 df_plot = final_df[
@@ -39,16 +34,16 @@ fig = px.parallel_coordinates(
     },
     range_color=[df_plot["values_0"].min(), df_plot["values_0"].max()],
     color_continuous_scale=px.colors.sequential.Viridis,
-    title=f"only_dbb_GC_2020_2022_15min_nq90_extr4",
+    title=f"Результаты подбора параметров ApataV2. Данные : GC_2020_2022_15min_nq90_extr4",
 )
 
-fig.write_html(f"only_dbb_GC_2020_2022_15min_nq90_extr4.html")  # сохраняем в файл
+fig.write_html(f"apataV2_GC_2020_2022_15min_nq90_extr4.html")  # сохраняем в файл
 fig.show()
 
 
 '''
-file_root = "outputs/net_deep_b_des_tree_GC_2020_2022_15min_nq90_extr4_11_08_2022"
-filename = "intermedia_GC_2020_2022_15min_nq90_extr4.xlsx"
+file_root = "outputs"
+filename = "neet_arch_opt_bbn.xlsx"
 final_df = pd.read_excel(f"{file_root}/{filename}")  # загружаем результаты  анализа
 
 df_plot = final_df[
@@ -85,7 +80,7 @@ fig = px.parallel_coordinates(
     },
     range_color=[df_plot["values_0"].min(), df_plot["values_0"].max()],
     color_continuous_scale=px.colors.sequential.Viridis,
-    title=f"усложненная сеть_GC_2020_2022_15min_nq90_extr4",
+    title=f"Результаты подбора параметров со сложной  архитектурой. Данные : GC_2020_2022_15min_nq90_extr4",
 )
 
 fig.write_html(f"adv_net_intermedia_GC_2020_2022_15min_nq90_extr4.html")  # сохраняем в файл

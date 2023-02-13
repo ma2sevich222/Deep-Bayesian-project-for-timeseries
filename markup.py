@@ -1,10 +1,4 @@
-#######################################################
-# Copyright © 2021-2099 Ekosphere. All rights reserved
-# Author: Ilia Koniushok
-# Contacts: <ikonushok@gmail.com>
-# File: markup_testing.py
-#######################################################
-# тут надо протестировать разметки по различным сглаживаниям на предмет устойчивости к комиссии
+
 
 import numpy as np
 import pandas as pd
@@ -30,7 +24,7 @@ pd.pandas.set_option('display.max_columns', None)
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.precision", 2)
 warnings.filterwarnings("ignore")
-filename = 'GC_2020_2022_60min.csv'
+filename = 'GC_2020_2022_15min.csv'
 df = make_df_from_csv_for_forward(f'source_root/{filename}')
 
 
@@ -63,7 +57,7 @@ results = pd.DataFrame(columns=['extrW', 'FinalEquity', 'SharpRatio'], index=[])
 finalEq = []
 sharpR = []
 
-NQ_list = [10,20,30,40,50,60,70,80,90,95]  # 5 - оставили 5% от составляющих сигнала (Убрали 95% шума) (Чем меньше, тем лучше сглаживание)
+NQ_list = [10,20,30,40,50,60,70,80,90,95,100]  # 5 - оставили 5% от составляющих сигнала (Убрали 95% шума) (Чем меньше, тем лучше сглаживание)
 
 # показать Backtest на определенном extrW и NQ
 showBacktest = True

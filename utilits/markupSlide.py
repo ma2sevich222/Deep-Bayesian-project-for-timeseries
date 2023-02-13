@@ -1,9 +1,4 @@
-#######################################################
-# Copyright © 2021-2099 Ekosphere. All rights reserved
-# Author: Ilia Koniushok
-# Contacts: <ikonushok@gmail.com>
-# File: markupSlide.py
-#######################################################
+
 import numpy as np
 
 def markupSlide(df, smoothing, extrW, commission=0, checking=False):

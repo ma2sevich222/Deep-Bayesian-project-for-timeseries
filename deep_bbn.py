@@ -1,9 +1,4 @@
-#######################################################
-# Copyright © 2021-2099 Ekosphere. All rights reserved
-# Author: Evgeny Matusevich
-# Contacts: <ma2sevich222@gmail.com>
-# File: deep_bbn.py
-#######################################################
+
 import os
 from datetime import date
 import numpy as np
@@ -35,7 +30,7 @@ intermedia.to_excel(
     f"{out_root}/{out_data_root}/intermedia_{source_file_name[:-4]}.xlsx"
 )
 clf = DecisionTreeClassifier()
-n_trials = 100
+n_trials = 1000
 
 
 ###################################################################################################
@@ -49,17 +44,18 @@ def objective(trial):
     """""" """""" """""" """""" """"" Параметры сети """ """""" """""" """""" """"""
 
     batch_s = 300
-
+    epochs = 1000
     """""" """""" """""" """""" """"" Параметры для оптимизации   """ """ """ """ """ """ """ """ """ ""
 
-    patch = trial.suggest_int("patch", 120, 300)
-    epochs = trial.suggest_int("epochs", 100, 800,step=50)
-    n_hiden = trial.suggest_int("n_hiden", 300, 500, step=10)
-    n_hiden_two = trial.suggest_int("n_hiden_two", 300, 500, step=10)
-    n_hiden_three= trial.suggest_int("n_hiden_three", 10, 200, step=10)
-    train_window = trial.suggest_categorical("train_window", [2640,7920,16016,19976])
+    patch = trial.suggest_int("patch", 550, 650,step=2)
+
+    n_hiden = trial.suggest_int("n_hiden", 2, 120, step=10)
+    n_hiden_two = trial.suggest_int("n_hiden_two", 600, 760, step=10)
+    n_hiden_three= trial.suggest_int("n_hiden_three", 500, 700, step=10)
+    n_hiden_four = trial.suggest_int("n_hiden_four", 300, 600, step=10)
+    train_window = trial.suggest_categorical("train_window", [3520,5280,8800,10560,17600])
     forward_window = trial.suggest_categorical(
-        "forward_window", [1320, 2640,7920]
+        "forward_window", [1760,3520,5280]
     )
     ##############################################################################################
     DBNmodel = nn.Sequential(
@@ -76,7 +72,11 @@ def objective(trial):
         ),
         nn.ReLU(),
         bnn.BayesLinear(
-            prior_mu=0, prior_sigma=0.1, in_features=n_hiden_three, out_features=2
+            prior_mu=0, prior_sigma=0.1, in_features=n_hiden_three, out_features=n_hiden_four
+        ),
+        nn.ReLU(),
+        bnn.BayesLinear(
+            prior_mu=0, prior_sigma=0.1, in_features=n_hiden_four, out_features=2
         ),
     )
     ###################################################################################################
@@ -111,18 +111,22 @@ def objective(trial):
         optimizer = optim.Adam(DBNmodel.parameters(), lr=0.001)
         DBNmodel.cuda()
         for step in range(epochs):
+            list_of_cost = []
             for _, (data, target) in enumerate(DNB_dataloader):
                 models = DBNmodel(data)
                 cross_entropy = cross_entropy_loss(models, target)
 
                 kl = klloss(DBNmodel)
                 total_cost = cross_entropy + klweight * kl
-
+                list_of_cost.append(float(total_cost.cpu().detach().numpy()))
                 optimizer.zero_grad()
                 total_cost.backward()
                 optimizer.step()
-
-            if step % 100 == 0:
+            epoch_cost = sum(list_of_cost)/len(list_of_cost)
+            if epoch_cost<=0.15:
+                print(f'early stop (эпоха : {step},лосс : {epoch_cost}')
+                break
+            if step % 200 == 0:
                 print("Энтропия", cross_entropy)
                 print("Финальная лосс", total_cost)
         '''Формируем обучающие данные для классификатора деревьев решений, где 
@@ -183,6 +187,9 @@ def objective(trial):
     net_profit = df_stata["Net Profit [$]"].values[0]
     Sharpe_Ratio = df_stata["Sharpe Ratio"].values[0]
     trades = df_stata["# Trades"].values[0]
+    if trades <= 300:
+        net_profit = -222000
+        Sharpe_Ratio = 0
     trial.set_user_attr("# Trades", trades)
     parameters = trial.params
     parameters.update({"trial": trial.number})
@@ -219,10 +226,10 @@ df_plot = tune_results[
         "values_1",
         "user_attrs_# Trades",
         "params_patch",
-        "params_epochs",
         "params_n_hiden",
         "params_n_hiden_two",
         "params_n_hiden_three",
+        "n_hiden_four",
         "params_train_window",
         "params_forward_window",
     ]
@@ -236,10 +243,10 @@ fig = px.parallel_coordinates(
         "values_1": "Sharpe_Ratio",
         "user_attrs_# Trades": "Trades",
         "params_patch": "patch(bars)",
-        "params_epochs": "epochs",
         "params_n_hiden": "n_hiden",
-        "params_n_hiden_two": "n_hiden_two",
-        "params_n_hiden_three" : "n_hiden_three",
+        "params_n_hiden_two": "n_hiden_2",
+        "params_n_hiden_three": "n_hiden_3",
+        "params_n_hiden_four": "n_hiden_4",
         "params_train_window": "train_window (bars)",
         "params_forward_window": "forward_window (bars)",
     },

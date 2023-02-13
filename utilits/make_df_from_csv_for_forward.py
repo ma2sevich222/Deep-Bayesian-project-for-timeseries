@@ -1,9 +1,4 @@
-#######################################################
-# Copyright © 2021-2099 Ekosphere. All rights reserved
-# Author: Ilia Koniushok
-# Contacts: <ikonushok@gmail.com>
-# File: make_df_from_csv_for_forward.py
-#######################################################
+
 import numpy as np
 import pandas as pd
 import pytest

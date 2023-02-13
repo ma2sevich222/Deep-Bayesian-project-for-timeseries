@@ -1,9 +1,4 @@
-#######################################################
-# Copyright © 2021-2099 Ekosphere. All rights reserved
-# Author: Evgeny Matusevich
-# Contacts: <ma2sevich222@gmail.com>
-# File: deep_bbn.py
-#######################################################
+
 import os
 from datetime import date
 import numpy as np
@@ -49,17 +44,15 @@ def objective(trial):
     """""" """""" """""" """""" """"" Параметры сети """ """""" """""" """""" """"""
 
     batch_s = 300
-
+    epochs = 1000
     """""" """""" """""" """""" """"" Параметры для оптимизации   """ """ """ """ """ """ """ """ """ ""
 
-    patch = trial.suggest_int("patch", 2, 300,step=5)
-    epochs = trial.suggest_int("epochs", 500, 1500,step=50)
-    n_hiden = trial.suggest_int("n_hiden", 50, 500, step=10)
-    n_hiden_two = trial.suggest_int("n_hiden_two", 50, 500, step=10)
-
-    train_window = trial.suggest_categorical("train_window", [2640,7920,16016,19976])
+    patch = trial.suggest_int("patch", 140, 230,step=2)
+    n_hiden = trial.suggest_int("n_hiden", 2, 10, step=2)
+    n_hiden_two = trial.suggest_int("n_hiden_two", 150, 450, step=2)
+    train_window = trial.suggest_categorical("train_window", [8800,10560,17600])
     forward_window = trial.suggest_categorical(
-        "forward_window", [1320, 2640,7920,16016]
+        "forward_window", [1760,3520,5280]
     )
     ##############################################################################################
     DBNmodel = nn.Sequential(
@@ -107,18 +100,22 @@ def objective(trial):
         optimizer = optim.Adam(DBNmodel.parameters(), lr=0.001)
         DBNmodel.cuda()
         for step in range(epochs):
+            list_of_cost = []
             for _, (data, target) in enumerate(DNB_dataloader):
                 models = DBNmodel(data)
                 cross_entropy = cross_entropy_loss(models, target)
 
                 kl = klloss(DBNmodel)
                 total_cost = cross_entropy + klweight * kl
-
+                list_of_cost.append(float(total_cost.cpu().detach().numpy()))
                 optimizer.zero_grad()
                 total_cost.backward()
                 optimizer.step()
-
-            if step % 100 == 0:
+            epoch_cost = sum(list_of_cost)/len(list_of_cost)
+            if epoch_cost<=0.15:
+                print(f'early stop (эпоха : {step},лосс : {epoch_cost}')
+                break
+            if step % 200 == 0:
                 print("Энтропия", cross_entropy)
                 print("Финальная лосс", total_cost)
         '''Формируем обучающие данные для классификатора деревьев решений, где 
@@ -179,6 +176,9 @@ def objective(trial):
     net_profit = df_stata["Net Profit [$]"].values[0]
     Sharpe_Ratio = df_stata["Sharpe Ratio"].values[0]
     trades = df_stata["# Trades"].values[0]
+    if trades <= 300:
+        net_profit = -222000
+        Sharpe_Ratio = 0
     trial.set_user_attr("# Trades", trades)
     parameters = trial.params
     parameters.update({"trial": trial.number})
@@ -215,7 +215,6 @@ df_plot = tune_results[
         "values_1",
         "user_attrs_# Trades",
         "params_patch",
-        "params_epochs",
         "params_n_hiden",
         "params_n_hiden_two",
         "params_train_window",
@@ -231,7 +230,6 @@ fig = px.parallel_coordinates(
         "values_1": "Sharpe_Ratio",
         "user_attrs_# Trades": "Trades",
         "params_patch": "patch(bars)",
-        "params_epochs": "epochs",
         "params_n_hiden": "n_hiden",
         "params_n_hiden_two": "n_hiden_two",
         "params_train_window": "train_window (bars)",
@@ -239,7 +237,7 @@ fig = px.parallel_coordinates(
     },
     range_color=[df_plot["values_0"].min(), df_plot["values_0"].max()],
     color_continuous_scale=px.colors.sequential.Viridis,
-    title=f"bayes_parameters_select_{source_file_name[:-4]}_optune_epoch_{n_trials}",
+    title=f"with_cash_parameters_select_{source_file_name[:-4]}_optune_epoch_{n_trials}",
 )
 
 fig.write_html(f"{out_root}/{out_data_root}/hyp_par_sel_{source_file_name[:-4]}.htm")

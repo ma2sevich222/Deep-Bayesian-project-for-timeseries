@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="dbf0ebc5-5ecc-4322-9c1d-0ea84eee9042" name="Changes" comment="добавил различные конфигурации сети и настроек для испытания">
+      <change afterPath="$PROJECT_DIR$/parallel_plots.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cash_class_deep_bbn.py" beforeDir="false" afterPath="$PROJECT_DIR$/cash_class_deep_bbn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clean_deep_bbn.py" beforeDir="false" afterPath="$PROJECT_DIR$/clean_deep_bbn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cov_deep_bbn.py" beforeDir="false" afterPath="$PROJECT_DIR$/cov_deep_bbn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deep_bbn.py" beforeDir="false" afterPath="$PROJECT_DIR$/deep_bbn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/markup.py" beforeDir="false" afterPath="$PROJECT_DIR$/markup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/only_deep_bbn.py" beforeDir="false" afterPath="$PROJECT_DIR$/only_deep_bbn.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2BFUpbk16z34yT7WXGQfoLWsGTY" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../rbm_clust" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="web.server" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/outputs/old" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.parallel_plots">
+    <configuration name="deep_bbn" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="bayes_net" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$PROJECT_DIR$/venv/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/deep_bbn.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="deep_bbn_classification" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="bayes_net" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$PROJECT_DIR$/venv/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/deep_bbn_classification.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="des_tree" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="bayes_net" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/des_tree.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="extend" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="bayes_net" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/extend.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="markup" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="bayes_net" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/markup.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="parallel_plots" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="bayes_net" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/parallel_plots.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="updt_p" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="bayes_net" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/updt_p.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="true" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.deep_bbn_classification" />
+      <item itemvalue="Python.parallel_plots" />
+      <item itemvalue="Python.updt_p" />
+      <item itemvalue="Python.extend" />
+      <item itemvalue="Python.des_tree" />
+      <item itemvalue="Python.deep_bbn" />
+      <item itemvalue="Python.markup" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.markup" />
+        <item itemvalue="Python.deep_bbn" />
+        <item itemvalue="Python.des_tree" />
+        <item itemvalue="Python.extend" />
+        <item itemvalue="Python.updt_p" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dbf0ebc5-5ecc-4322-9c1d-0ea84eee9042" name="Changes" comment="" />
+      <created>1656501512001</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1656501512001</updated>
+      <workItem from="1656501513368" duration="4737000" />
+      <workItem from="1656579419755" duration="17481000" />
+      <workItem from="1656773640698" duration="7510000" />
+      <workItem from="1656912415669" duration="11348000" />
+      <workItem from="1657002600330" duration="4444000" />
+      <workItem from="1657122373568" duration="812000" />
+      <workItem from="1657340029545" duration="6835000" />
+      <workItem from="1658213750032" duration="16338000" />
+      <workItem from="1658277598874" duration="16446000" />
+      <workItem from="1658318093148" duration="11038000" />
+      <workItem from="1658331780872" duration="681000" />
+      <workItem from="1658370996357" duration="2517000" />
+      <workItem from="1658465815695" duration="458000" />
+      <workItem from="1658467916394" duration="3309000" />
+      <workItem from="1658473452562" duration="2181000" />
+      <workItem from="1658731901852" duration="746000" />
+      <workItem from="1658736196675" duration="597000" />
+      <workItem from="1658751216761" duration="1085000" />
+      <workItem from="1658838238056" duration="17000" />
+      <workItem from="1658839429352" duration="298000" />
+      <workItem from="1658988102723" duration="7760000" />
+      <workItem from="1659056796103" duration="640000" />
+      <workItem from="1659074873000" duration="4184000" />
+      <workItem from="1659141511828" duration="7031000" />
+      <workItem from="1659224552039" duration="623000" />
+      <workItem from="1659323078121" duration="627000" />
+      <workItem from="1659325742304" duration="8649000" />
+      <workItem from="1659339253840" duration="107000" />
+      <workItem from="1659346669268" duration="7206000" />
+      <workItem from="1659402723339" duration="2894000" />
+      <workItem from="1659419303398" duration="1538000" />
+      <workItem from="1659435027172" duration="3700000" />
+      <workItem from="1659440302560" duration="8373000" />
+      <workItem from="1659503156570" duration="1676000" />
+      <workItem from="1659523923956" duration="90000" />
+      <workItem from="1659587970789" duration="1243000" />
+      <workItem from="1659693566756" duration="11409000" />
+      <workItem from="1659783181293" duration="14769000" />
+      <workItem from="1659833203795" duration="8047000" />
+      <workItem from="1659926082220" duration="27526000" />
+      <workItem from="1660006905286" duration="15027000" />
+      <workItem from="1660109962257" duration="7087000" />
+      <workItem from="1660199346060" duration="17609000" />
+      <workItem from="1660262724425" duration="8990000" />
+      <workItem from="1660314801371" duration="170000" />
+      <workItem from="1660446415138" duration="9368000" />
+      <workItem from="1660545085840" duration="3430000" />
+      <workItem from="1660563887888" duration="1348000" />
+      <workItem from="1660611591312" duration="4087000" />
+      <workItem from="1660634247778" duration="482000" />
+      <workItem from="1660731997386" duration="12679000" />
+    </task>
+    <task id="LOCAL-00001" summary=" чистка">
+      <created>1658470243022</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1658470243022</updated>
+    </task>
+    <task id="LOCAL-00002" summary=" чистка">
+      <created>1658474211364</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1658474211364</updated>
+    </task>
+    <task id="LOCAL-00003" summary="добавил требования">
+      <created>1658474928578</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1658474928578</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Добавли функцию преобразования размеченных данных">
+      <created>1659693699054</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1659693699054</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Добавли функцию преобразования размеченных данных">
+      <created>1659694533041</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1659694533041</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Добавли функцию преобразования размеченных данных, возмомжность переключения между гпу">
+      <created>1659695664679</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1659695664679</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Добавлена строка-коментарий где начинается форвард">
+      <created>1659696256340</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1659696256340</updated>
+    </task>
+    <task id="LOCAL-00008" summary="добавлен подбор разметки markup">
+      <created>1659700027037</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1659700027037</updated>
+    </task>
+    <task id="LOCAL-00009" summary="добавил создание папок в маркап">
+      <created>1659706326356</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1659706326356</updated>
+    </task>
+    <task id="LOCAL-00010" summary="добавил различные конфигурации сети и настроек для испытания">
+      <created>1660023339503</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1660023339503</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value=" чистка" />
+    <MESSAGE value="добавил требования" />
+    <MESSAGE value="Добавли функцию преобразования размеченных данных" />
+    <MESSAGE value="Добавли функцию преобразования размеченных данных, возмомжность переключения между гпу" />
+    <MESSAGE value="Добавлена строка-коментарий где начинается форвард" />
+    <MESSAGE value="добавлен подбор разметки markup" />
+    <MESSAGE value="добавил создание папок в маркап" />
+    <MESSAGE value="добавил различные конфигурации сети и настроек для испытания" />
+    <option name="LAST_COMMIT_MESSAGE" value="добавил различные конфигурации сети и настроек для испытания" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/bayes_net$extend.coverage" NAME="extend Coverage Results" MODIFIED="1656935718253" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/bayes_net$deep_bbn.coverage" NAME="deep_bbn Coverage Results" MODIFIED="1659705761773" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/bayes_net$markup.coverage" NAME="markup Coverage Results" MODIFIED="1660743578861" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/bayes_net$parallel_plots.coverage" NAME="parallel_plots Coverage Results" MODIFIED="1660747621688" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/bayes_net$deep_bbn_classification.coverage" NAME="deep_bbn_classification Coverage Results" MODIFIED="1658314377535" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/bayes_net$des_tree.coverage" NAME="des_tree Coverage Results" MODIFIED="1657005940433" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/bayes_net$bayes_run.coverage" NAME="bayes_run Coverage Results" MODIFIED="1656661339312" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/bayes_net$updt_p.coverage" NAME="updt_p Coverage Results" MODIFIED="1656914566842" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
